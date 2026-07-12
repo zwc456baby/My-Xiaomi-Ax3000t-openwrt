@@ -12,3 +12,5 @@
 
 # Modify default IP
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
+echo "正在检测 vsftpd 依赖链："
+grep -r "DEPENDS:=+vsftpd" package/ | cut -d':' -f1
