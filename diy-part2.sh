@@ -12,5 +12,10 @@
 
 # Modify default IP
 #sed -i 's/192.168.1.1/192.168.50.5/g' package/base-files/files/bin/config_generate
-echo "正在检测 vsftpd 依赖链："
-grep -r "DEPENDS:=+vsftpd" package/ | cut -d':' -f1
+# 1. 强制将 luci-app-vsftpd 内部的所有 vsftpd 依赖全部替换为 vsftpd-alt
+sed -i 's/PACKAGE_vsftpd/PACKAGE_vsftpd-alt/g' package/lean/luci-app-vsftpd/Makefile
+sed -i 's/+vsftpd/+vsftpd-alt/g' package/lean/luci-app-vsftpd/Makefile
+
+# 2. 顺便确保 .config 中关闭标准版，开启精简版
+echo "CONFIG_PACKAGE_vsftpd-alt=y" >> .config
+sed -i 's/CONFIG_PACKAGE_vsftpd=y/# CONFIG_PACKAGE_vsftpd is not set/' .config
